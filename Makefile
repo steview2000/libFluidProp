@@ -1,14 +1,16 @@
-all: testC
+all: fluid-prop
 
-testC: testC.o libFluidPropC.a
-	cc testC.o -lFluidPropC -ldl -lCoolProp -o testC
 
-testC.o: testC.c
-	cc -c testC.c
+fluid-prop: obj/fluid-prop.o libFluidPropC.a
+	cc obj/fluid-prop.o -lFluidPropC -ldl -lCoolProp -o fluid-prop
 
-libFluidPropC.a: libFluidPropC.cpp
-	g++ -c libFluidPropC.cpp -o libFluidPropC.o -DCOOLPROP_LIB -I../include 
-	ar rcs libFluidPropC.a libFluidPropC.o
+obj/fluid-prop.o: src/fluid-prop.c
+	cc -c src/fluid-prop.c
+	mv fluid-prop.o obj/
+
+libFluidPropC.a: src/libFluidPropC.cpp
+	g++ -c src/libFluidPropC.cpp -o obj/libFluidPropC.o -DCOOLPROP_LIB -I../include 
+	ar rcs libFluidPropC.a obj/libFluidPropC.o
 
 install:
 	cp libFluidPropC.a /usr/local/lib/
