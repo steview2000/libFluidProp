@@ -2,7 +2,7 @@ all: fluid-prop
 
 
 fluid-prop: obj/fluid-prop.o libFluidPropC.a
-	cc obj/fluid-prop.o -lFluidPropC -ldl -lCoolProp -o fluid-prop
+	cc obj/fluid-prop.o -lFluidPropC -ldl -lCoolProp -o fluid-prop -lm
 
 obj/fluid-prop.o: src/fluid-prop.c
 	cc -c src/fluid-prop.c
