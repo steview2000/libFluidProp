@@ -27,7 +27,7 @@
 #include "header.def"
 #include "header.h"
 
-#define DIAMETER 9.525e-2  		/* diameter of cylindrical cell in cm */
+#define DIAMETER 0.1  		/* diameter of cylindrical cell in m */
 #define HEIGHT 0.100 //9.964
 #define CHOICE 2			/* 0 = fix dtc (onset), 1 fix height (onset), 2 fix height (turbulence) */
 
@@ -208,7 +208,7 @@ printf("DTc = %.4e\n\n", dtc);
 
 	if(CHOICE == 2){
 		volume = 1.e-3*height*DIAMETER*DIAMETER*PI/4.;   /* cell volume in liter */
-		rayleigh = dtemp*rho*alpha*G*height*height*height/(kappa*nu);
+		rayleigh = G*dtemp*alpha*height*height*height/(kappa*nu);
 /*
 		nusselt = 0.3265*pow(rayleigh, 0.25)*pow(sigma, -1./12.);		
 		nusselt += 0.002352*pow(rayleigh, 3./7.)*pow(sigma, -1./7.);
