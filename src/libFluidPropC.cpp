@@ -5,7 +5,7 @@
 #include "crossplatform_shared_ptr.h"
 
 extern "C" {
-	int getCoolProp(char * fluid, double T, double P, double *prho, double *palpha, double  *pcomp, double *plambda, double *pkappa, double *pnu, double  *pcp, double *ppsi, double *plewis ){
+	int getCoolProp(char * fluid, double T, double P, double x,double *prho, double *palpha, double  *pcomp, double *plambda, double *pkappa, double *pnu, double  *pcp, double *ppsi, double *plewis ){
 		//*prho    = PropsSI("D", "T", T, "P", P, fluid);
 		//*plambda = PropsSI("L", "T", T, "P", P, fluid);
 		//*pcp     = PropsSI("CPMASS", "T", T, "P", P, fluid);
