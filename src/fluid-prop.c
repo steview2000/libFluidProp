@@ -56,7 +56,9 @@ int main(){
 	double psi, lewis, rayleigh, plate_ratio_CU, plate_ratio_AL;
 	double x=1;
 	double dtemp, volume, nusselt, lambda_eff, current, t_b, x_WL, alf_dt, drc, rc_gamma, a_g;
-	char fluid[200];
+	char fluid[200],flag[100];
+	
+	sprintf(flag,"HEOS");
 
 	if(CHOICE == 0)
 		printf("\nDelta T_c is user specified. \nOutput for pattern formation near onset.\n");
@@ -78,7 +80,6 @@ int main(){
             scanf("%lf %lf", &temp, &press);
 			T = temp + T0;
 			P  = press *1e5;
-
     }
     else{
             printf("mean temperature (deg C) ?   ");
@@ -88,15 +89,6 @@ int main(){
     }
 
 	x = 0.; psi = 0.; lewis = 0.; 	/* for mixtures only : */
-	if(gas >= 20){
-		printf("Molar concentration of the heavier component ?  ");
-		scanf("%lf", &x);
-	}
-	if(gas == 22){
-		printf("Weight concentration of Glycerol?  ");
-		scanf("%lf", &x);
-	}
-
 	if(CHOICE == 2){
 		printf("Temperature difference ?  ");
 		scanf("%lf", &dtemp);
@@ -170,10 +162,20 @@ int main(){
 			printf("FC72 not yet implemented!!\n");
 			break;
 		case 20:
-			printf("H2-xe  not yet implemented!!\n");
+			printf("H2-Xe  not yet implemented!!\n");
+			//printf("Molar concentration of the heavier component ?  ");
+			//scanf("%lf", &x);
 			break;
 		case 21:
-			printf("H2-sf6  not yet implemented!!\n");
+			printf("H2-SF6  not yet implemented!!\n");
+			//printf("Molar concentration of the heavier component ?  ");
+			//scanf("%lf", &x);
+			break;
+		case 22:
+			printf("Weight concentration of Glycerol?  ");
+			scanf("%lf", &x);
+			sprintf(fluid,"MGL[%.2f]",x);
+			sprintf(flag,"INCOMP",x);
 			break;
 		default:
 			printf("no such fluid available\n");
@@ -182,7 +184,7 @@ int main(){
 	}
 	printf("T: %lf\tP: %lf\n",T,P);
 	//shared_ptr<AbstractState> Water(AbstractState::factory("HEOS",fluid));
-	getCoolProp(fluid, T, P, x, &rho, &alpha, &comp, &lambda, &kappa, &nu, &cp, &psi, &lewis);
+	getCoolProp(fluid, T, P, &rho, &alpha, &comp, &lambda, &kappa, &nu, &cp, &psi, &lewis,flag);
 	kappa  = lambda/(cp*rho);
 
 	sigma = nu/kappa;				/* Prandtl number */
@@ -255,8 +257,8 @@ printf("DTc = %.4e\n\n", dtc);
 		exit(0);
 	}
 
-	getCoolProp(fluid, temp1, P, &rho1, &alpha1, &comp, &lambda1, &kappa1, &nu1, &cp1, &psi, &lewis);
-	getCoolProp(fluid, temp2, P, &rho2, &alpha2, &comp, &lambda2, &kappa2, &nu2, &cp2, &psi, &lewis);
+	getCoolProp(fluid, temp1, P, &rho1, &alpha1, &comp, &lambda1, &kappa1, &nu1, &cp1, &psi, &lewis,flag);
+	getCoolProp(fluid, temp2, P, &rho2, &alpha2, &comp, &lambda2, &kappa2, &nu2, &cp2, &psi, &lewis,flag);
 	
 	kappa1 = lambda1/(rho1*cp1);
 	kappa2 = lambda2/(rho2*cp2);
@@ -396,6 +398,8 @@ printf("DTc = %.4e\n\n", dtc);
 	printf("kinematic viscosity (m^2/s)      = %.5g \n",nu);
 	printf("isobaric heat capacity (J/K kg)  = %.5g \n",cp);
 	printf("Prandtl number                   = %.3f\n\n", sigma);
+	printf("\n");	
+	printf("dynamic viscosity (Pa s)         = %.5g \n",nu*rho);
 	printf("[(rho*Cp)_Cu/(rho*Cp)]^(1/2) = %.3f\n", plate_ratio_CU);
 	printf("[(rho*Cp)_Al/(rho*Cp)]^(1/2) = %.3f\n", plate_ratio_AL);
 	if(gas >= 20)

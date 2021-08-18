@@ -1,3 +1,5 @@
-obj/fluid-prop.o
+obj/**
 ./fluid-prop
 fluid-prop
+testC
+libFluidPropC.a
