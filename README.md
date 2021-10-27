@@ -26,3 +26,4 @@ C library to calculate fluid properties - based heavily on CoolProp
 	sudo ln -sf libCoolProp.so.5 libCoolProp.so
 	popd
 	
+	sudo ldconfig
