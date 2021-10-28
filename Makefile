@@ -9,6 +9,7 @@ fluid-prop: obj/fluid-prop.o libFluidPropC.a
 
 obj/fluid-prop.o: src/fluid-prop.c
 	cc -c src/fluid-prop.c
+	mkdir -p obj
 	mv fluid-prop.o obj/
 
 libFluidPropC.a: src/libFluidPropC.cpp

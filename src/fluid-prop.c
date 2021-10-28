@@ -175,7 +175,7 @@ int main(){
 			printf("Weight concentration of Glycerol?  ");
 			scanf("%lf", &x);
 			sprintf(fluid,"MGL[%.2f]",x);
-			sprintf(flag,"INCOMP",x);
+			sprintf(flag,"INCOMP");
 			break;
 		default:
 			printf("no such fluid available\n");
@@ -185,7 +185,7 @@ int main(){
 	printf("T: %lf\tP: %lf\n",T,P);
 	//shared_ptr<AbstractState> Water(AbstractState::factory("HEOS",fluid));
 	getCoolProp(fluid, T, P, &rho, &alpha, &comp, &lambda, &kappa, &nu, &cp, &psi, &lewis,flag);
-	kappa  = lambda/(cp*rho);
+	//kappa  = lambda/(cp*rho);
 
 	sigma = nu/kappa;				/* Prandtl number */
 	plate_ratio_CU = sqrt(RHO_CU*CP_CU/(rho*cp*1.e-7));
@@ -260,8 +260,8 @@ printf("DTc = %.4e\n\n", dtc);
 	getCoolProp(fluid, temp1, P, &rho1, &alpha1, &comp, &lambda1, &kappa1, &nu1, &cp1, &psi, &lewis,flag);
 	getCoolProp(fluid, temp2, P, &rho2, &alpha2, &comp, &lambda2, &kappa2, &nu2, &cp2, &psi, &lewis,flag);
 	
-	kappa1 = lambda1/(rho1*cp1);
-	kappa2 = lambda2/(rho2*cp2);
+	//kappa1 = lambda1/(rho1*cp1);
+	//kappa2 = lambda2/(rho2*cp2);
 	sigma1 = nu1/kappa1;
 	sigma2 = nu2/kappa2;
 

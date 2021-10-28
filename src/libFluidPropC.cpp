@@ -17,8 +17,8 @@ extern "C" {
 		if (strcmp(flag,"INCOMP")== 0){
 			sprintf(fullfluid,"INCOMP::%s",fluid);
 			//printf("INCOMPRESSIBLE FLUID\n");
-			T1 = T*1.01;
-			T2 = T*0.99;
+			T1 = T*1.001;
+			T2 = T*0.999;
 
 			rho1    = PropsSI("D", "T", T1, "P", P, fullfluid);
 			rho2    = PropsSI("D", "T", T2, "P", P, fullfluid);
@@ -44,6 +44,7 @@ extern "C" {
 			*plambda = fluid_PTR->conductivity();
 			*pnu     = fluid_PTR->viscosity()/(*prho);
 			*pcomp   = fluid_PTR->isothermal_compressibility();
+			*pkappa   = *plambda/(*pcp * *prho);
 
 			// TODO add the pcomp and ppsi and plewsi
 			*ppsi   = 0;
