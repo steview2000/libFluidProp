@@ -4,7 +4,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-	int getCoolProp(char * fluid, double T, double P, double *prho, double *palpha, double  *pcomp, double *plambda, double *pkappa, double *pnu, double  *pcp , double *ppsi, double *plewis);
+	int getCoolProp(char * fluid, double T, double P, double *prho, double *palpha, double  *pcomp, double *plambda, double *pkappa, double *pnu, double  *pcp , double *ppsi, double *plewis, char* flag);
 
 #ifdef __cplusplus
 }
