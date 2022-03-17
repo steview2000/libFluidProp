@@ -19,10 +19,10 @@ C library to calculate fluid properties - based heavily on CoolProp
 	
 	Copy by hand the libraries:
 	
-	# Change "32" to match your system bitness
-	sudo cp libCoolProp.so /usr/local/lib/libCoolProp.so.32.:version:
+	# Change "64" to match your system bitness
+	sudo cp libCoolProp.so /usr/local/lib/libCoolProp.so.64.:version:
 	pushd /usr/local/lib
-	sudo ln -sf libCoolProp.so.32.:version: libCoolProp.so.5
+	sudo ln -sf libCoolProp.so.64.:version: libCoolProp.so.5
 	sudo ln -sf libCoolProp.so.5 libCoolProp.so
 	popd
 	

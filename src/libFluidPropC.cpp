@@ -10,8 +10,6 @@ extern "C" {
 		using namespace CoolProp;
 		double rho,rho1,rho2,T1,T2;
 		char fullfluid[100];
-
-
 		//printf("Fluid-string: %s %s\n",flag,fluid);
 
 		if (strcmp(flag,"INCOMP")== 0){

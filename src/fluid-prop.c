@@ -27,8 +27,8 @@
 #include "header.def"
 #include "header.h"
 
-#define DIAMETER 0.1  		/* diameter of cylindrical cell in m */
-#define HEIGHT 0.100 //9.964
+#define DIAMETER 0.32  		/* diameter of cylindrical cell in m */
+#define HEIGHT 0.04 //9.964
 #define CHOICE 2			/* 0 = fix dtc (onset), 1 fix height (onset), 2 fix height (turbulence) */
 
 // Some material parameters for plate corrections
@@ -220,9 +220,9 @@ printf("DTc = %.4e\n\n", dtc);
 		nusselt += 0.002352*pow(rayleigh, 3./7.)*pow(sigma, -1./7.);
 		nusselt = nusselt/(1. + 0.181*log10(aspect));*/
 
-//		nusselt = NofR_Oregon(sigma, rayleigh);
+		nusselt = NofR_Oregon(sigma, rayleigh);
 //		nusselt = 0.137*pow(rayleigh, 0.300);
-		nusselt = 0.104*pow(rayleigh, 0.312);
+//		nusselt = 0.104*pow(rayleigh, 0.312);
 //		nusselt = 0.112*pow(rayleigh, 0.312);	
 //      fn_nus(sigma, rayleigh, &nusselt, &reynolds);
 		lambda_eff = lambda*nusselt;
@@ -400,6 +400,10 @@ printf("DTc = %.4e\n\n", dtc);
 	printf("Prandtl number                   = %.3f\n\n", sigma);
 	printf("\n");	
 	printf("dynamic viscosity (Pa s)         = %.5g \n",nu*rho);
+	if(CHOICE == 2){
+	printf("free fall velocity (m/s)         = %.5g \n",sqrt(2*height*G*alpha*dtemp));
+	printf("free fall time (s)               = %.5g \n",sqrt(2*height/(G*alpha*dtemp)));
+	}
 	printf("[(rho*Cp)_Cu/(rho*Cp)]^(1/2) = %.3f\n", plate_ratio_CU);
 	printf("[(rho*Cp)_Al/(rho*Cp)]^(1/2) = %.3f\n", plate_ratio_AL);
 	if(gas >= 20)
