@@ -14,6 +14,7 @@ int main(){
 	printf("mass density       (kg/m^3): %.3g \n",rho);
 	printf("expansion coefficient (1/K): %.3g \n",alpha);
 	printf("heat conductivity   (W/m K): %.3g \n",lambda);
-
+	printf("Hello\n");
 	return 0;
+
 }

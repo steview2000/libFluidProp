@@ -9,6 +9,7 @@ fluid-prop: obj/fluid-prop.o libFluidPropC.a
 
 obj/fluid-prop.o: src/fluid-prop.c
 	cc -c src/fluid-prop.c
+	mkdir -p obj
 	mv fluid-prop.o obj/
 
 
@@ -24,4 +25,5 @@ libFluidPropC.so: src/libFluidPropC.cpp
 
 install:
 	cp libFluidPropC.a /usr/local/lib/
+	cp src/libFluidPropC.h /usr/local/include/
 	
