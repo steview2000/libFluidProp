@@ -29,7 +29,7 @@
 
 #define DIAMETER 0.32  		/* diameter of cylindrical cell in m */
 #define HEIGHT 0.04 //9.964
-#define CHOICE 2			/* 0 = fix dtc (onset), 1 fix height (onset), 2 fix height (turbulence) */
+#define CHOICE 1			/* 0 = fix dtc (onset), 1 fix height (onset), 2 fix height (turbulence) */
 
 // Some material parameters for plate corrections
 // TODO update units below
@@ -49,7 +49,7 @@ int main(){
 	double epsa, epsb, epsr;
 	double X, Y, Z, D0, a, b, epsT;
 	double omeg, taylor, tv, U, rossby;
-	double dtc, qcrit, sigma, sigma1, sigma2, dsigma, a_r, n_index, n_1, n_2, beta;
+	double dtc, qcrit, sigma, sigma1, sigma2, dsigma, a_r, n_index, n_index0,ns,n_1, n_2, beta;
 	double height, aspect, press;
 	double g3, g3_tilde, eps_crit, qc, xi0, tau0, F_th;
 	int gas, i, j;
@@ -182,7 +182,7 @@ int main(){
 			exit(0);
 
 	}
-	printf("T: %lf\tP: %lf\n",T,P);
+	printf("T [K]: %.4lf\tP [pa]: %.2lf\n",T,P);
 	//shared_ptr<AbstractState> Water(AbstractState::factory("HEOS",fluid));
 	getCoolProp(fluid, T, P, &rho, &alpha, &comp, &lambda, &kappa, &nu, &cp, &psi, &lewis,flag);
 	//kappa  = lambda/(cp*rho);
@@ -268,12 +268,20 @@ printf("DTc = %.4e\n\n", dtc);
 /* some refractive index stuff. Needed for shadowgraph sensitivity. */
 
     /* for refractive index calculation. OK only for CO2 and SF6.  */
-        if(gas == 4)	
-            a_r = 0.152;		/* CO2 */
-        else if(gas == 6)
-            a_r = 0.0777;		/* SF6 */
-        else
-            a_r = 0.;			/* all else */
+    switch(gas){
+		case 0:                 // air from: http://www.jacobnie.com/physics/atm_img/kay.html
+			ns = 1+0.0472326/(173.3-(1/(0.540*0.540))); // for lambda=540nm
+			n_index0 = 1+(ns-1)*P*(1+P*(60.1-0.972*(T-273.15))*1e-10)/(96095.43*(1+0.003661*(T-273.15)));
+			break;
+		case 4:
+        	a_r = 0.152;		/* CO2 */
+			break;
+    	case 6:
+        	a_r = 0.0777;		/* SF6 */
+			break;
+    	default:
+        	a_r = 0.;			/* all else */
+	}
 	n_index = sqrt((1.+2.*a_r*rho)/(1.-a_r*rho));    /* refractive index */
 	n_1 = sqrt((1.+2.*a_r*rho1)/(1.-a_r*rho1));
 	n_2 = sqrt((1.+2.*a_r*rho2)/(1.-a_r*rho2));
@@ -429,9 +437,9 @@ printf("DTc = %.4e\n\n", dtc);
 
 		printf("visc. tv = %.3f s		therm. tv = %.3f s\n\n",tv, tv*sigma);	  
 		printf("1/4 Hz yields Omega = %.3e and\tTaylor = %.3e\n", omeg, taylor);
-		if((gas == 4) || (gas == 6)){
+		if((gas == 0 || gas == 4) || (gas == 6)){
 //			sens = -9.44e4*beta*height*dtc;
-			printf("Refractive index n = %.5f   dn/dT = %.3e\n\n", n_index, beta);
+			printf("Refractive index n = %.5f (%.5f)  dn/dT = %.3e\n\n", n_index, n_index0,beta);
 		}
 
 	}
