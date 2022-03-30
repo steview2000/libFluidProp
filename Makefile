@@ -1,4 +1,4 @@
-all: fluid-prop testC
+all: fluid-prop testC libFluidPropC.so
 
 testC: src/testC.c obj/libFluidPropC.o
 	cc src/testC.c -L./ -L/home/falke/weis_sp/.local/lib obj/libFluidPropC.o -ldl -lCoolProp -o testC -lm -lstdc++
@@ -21,7 +21,7 @@ libFluidPropC.so: src/libFluidPropC.cpp
 	g++ -c -Wall -Werror -fPIC src/libFluidPropC.cpp -o libFluidPropC.o -DCOOLPROP_LIB -I../include
 	g++ -shared -lm -o libFluidPropC.so libFluidPropC.o
 	rm libFluidPropC.o
-	mv libFluidPropC.so ~/.local/lib
+	cp libFluidPropC.so ~/.local/lib
 
 install:
 	cp libFluidPropC.a /usr/local/lib/
