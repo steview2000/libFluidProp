@@ -9,23 +9,32 @@
 //#define NA		6.0221367e+23	/* Avogadro's number */
 #define KB 		1.38027E-23		/* Boltzmann's constant erg/K */
 //#define K		1.38027e-23		/*   J/K   */
-//#define RG 		8.314e7			/* gas constant in ergs/mole K */
+#define RG 		8.314462			/* gas constant in J/mole K */
 #define RC		1707.8			/* Crit. Rayleigh number */
 #define G 		9.81	/* local gravitational acceleration  in m/sec^2 */
 //#define PCONV	14.504			/* psi per bar */
 
+/* ------ fluid number ----*/
+#define AIR 0
+#define HYDROGEN 1 
+#define HE 2 
+#define N2 3 
+#define CO2 4 
+#define XENON 5 
+#define SF6 6
+
 /*-------- refractive-index virial coefficients -------*/
 
-//#define AR_HE	5.2e-7      /* unit:  m^3/mol   */
-//#define AR_CO2	6.65e-6
-//#define AR_SF6	1.134e-5
-//#define BR_HE	-6.0e-14    /* unit:  m^6/mol^2   */
-//#define BR_CO2	3.0e-12
-//#define BR_SF6	2.8e-11
-//#define AR_XE   1.036e-5 /* at 298 K */	
-//#define BR_XE	2.58e-11 /* at 298 K deg C */
-//#define AR_H2	2.0713e-6      /* unit:  m^3/mol   */
-//#define BR_H2	1.3e-13      /* unit:  m^6/mol^2   */
+#define AR_HE	5.2e-7      /* unit:  m^3/mol   */
+#define AR_CO2	6.65e-6
+#define AR_SF6	1.134e-5
+#define BR_HE	-6.0e-14    /* unit:  m^6/mol^2   */
+#define BR_CO2	3.0e-12
+#define BR_SF6	2.8e-11
+#define AR_XE   1.036e-5 /* at 298 K */	
+#define BR_XE	2.58e-11 /* at 298 K deg C */
+#define AR_H2	2.0713e-6      /* unit:  m^3/mol   */
+#define BR_H2	1.3e-13      /* unit:  m^6/mol^2   */
 
 /* -------  molecular mass ----------- */
 

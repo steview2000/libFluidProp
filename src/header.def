@@ -18,3 +18,4 @@ void h2_xe(double, double, double, double *, double *, double *, double *, doubl
 void he_sf6(double, double, double, double *, double *, double *, double *, double *, double *, double *, double *, double *);
 double NofR_GL(double, double);
 double NofR_Oregon(double, double);
+double refIndexTayag(double ,double ,int );

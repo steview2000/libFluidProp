@@ -49,7 +49,7 @@ int main(){
 	double epsa, epsb, epsr;
 	double X, Y, Z, D0, a, b, epsT;
 	double omeg, taylor, tv, U, rossby;
-	double dtc, qcrit, sigma, sigma1, sigma2, dsigma, a_r, n_index, n_index0,ns,n_1, n_2, beta;
+	double dtc, qcrit, sigma, sigma1, sigma2, dsigma, a_r, n_index, ns,n_1, n_2, beta;
 	double height, aspect, press;
 	double g3, g3_tilde, eps_crit, qc, xi0, tau0, F_th;
 	int gas, i, j;
@@ -101,25 +101,25 @@ int main(){
 /* get properties at the mean temperature. NOTE: nu is SHEAR viscosity. */
 	
 	switch (gas){
-		case 0:
+		case AIR:
 			sprintf(fluid,"Air");
 			break;
-		case 1:
+		case HYDROGEN:
 			sprintf(fluid,"Hydrogen");
 			break;
-		case 2:
+		case HE:
 			sprintf(fluid,"Helium");
 			break;
-		case 3:
+		case N2:
 			sprintf(fluid,"Nitrogen");
 			break;
-		case 4:
+		case CO2:
 			sprintf(fluid,"CO2");
 			break;
-		case 5:
+		case XENON:
 			sprintf(fluid,"Xenon");
 			break;
-		case 6:
+		case SF6:
 			sprintf(fluid,"SF6");
 			break;
 		case 7:
@@ -268,23 +268,29 @@ printf("DTc = %.4e\n\n", dtc);
 /* some refractive index stuff. Needed for shadowgraph sensitivity. */
 
     /* for refractive index calculation. OK only for CO2 and SF6.  */
-    switch(gas){
-		case 0:                 // air from: http://www.jacobnie.com/physics/atm_img/kay.html
+    if (gas == AIR){
 			ns = 1+0.0472326/(173.3-(1/(0.540*0.540))); // for lambda=540nm
-			n_index0 = 1+(ns-1)*P*(1+P*(60.1-0.972*(T-273.15))*1e-10)/(96095.43*(1+0.003661*(T-273.15)));
-			break;
-		case 4:
-        	a_r = 0.152;		/* CO2 */
-			break;
-    	case 6:
-        	a_r = 0.0777;		/* SF6 */
-			break;
-    	default:
-        	a_r = 0.;			/* all else */
+			n_index = 1+(ns-1)*P*(1+P*(60.1-0.972*(T-273.15))*1e-10)/(96095.43*(1+0.003661*(T-273.15)));
+			n_1 = 1+(ns-1)*P*(1+P*(60.1-0.972*(temp1-273.15))*1e-10)/(96095.43*(1+0.003661*(temp1-273.15)));
+			n_2 = 1+(ns-1)*P*(1+P*(60.1-0.972*(temp2-273.15))*1e-10)/(96095.43*(1+0.003661*(temp2-273.15)));
+	}else if( (gas==CO2) ||  (gas==HE) || (gas==SF6) ){
+			n_index = refIndexTayag(T,P,gas);
+			n_1 = refIndexTayag(temp1,P,gas);
+			n_2 = refIndexTayag(temp2,P,gas);
+    }else{ 
+		switch (gas){
+			case XENON:
+				a_r = AR_XE;
+				break;
+			case HYDROGEN:
+				a_r = AR_H2;
+			default:
+				a_r=0;
+			}
+		n_index = sqrt((1.+2.*a_r*rho)/(1.-a_r*rho));    /* refractive index  See. e.g., Thomas and Tayag, App Opt (1988)*/
+		n_1 = sqrt((1.+2.*a_r*rho1)/(1.-a_r*rho1));
+		n_2 = sqrt((1.+2.*a_r*rho2)/(1.-a_r*rho2));
 	}
-	n_index = sqrt((1.+2.*a_r*rho)/(1.-a_r*rho));    /* refractive index */
-	n_1 = sqrt((1.+2.*a_r*rho1)/(1.-a_r*rho1));
-	n_2 = sqrt((1.+2.*a_r*rho2)/(1.-a_r*rho2));
 	beta = (n_1 - n_2)/dtc;
 
 
@@ -439,9 +445,8 @@ printf("DTc = %.4e\n\n", dtc);
 		printf("1/4 Hz yields Omega = %.3e and\tTaylor = %.3e\n", omeg, taylor);
 		if((gas == 0 || gas == 4) || (gas == 6)){
 //			sens = -9.44e4*beta*height*dtc;
-			printf("Refractive index n = %.5f (%.5f)  dn/dT = %.3e\n\n", n_index, n_index0,beta);
+			printf("Refractive index n = %.5f   dn/dT = %.3e\n\n", n_index, beta);
 		}
-
 	}
 
 /* Output relevant to turbulent RBC */
@@ -576,4 +581,35 @@ double NofR_Oregon(double sig, double r)
 	ln = a + b*lr;
 	n  = pow(10., ln);
 	return(n);
+}
+
+double refIndexTayag(double T,double P,int fluid){
+	// Calculates the refractive index based on Tayag and Thomas
+	// all quantities in SI units
+	
+	double a,b,t,n;
+	switch (fluid) {
+		case SF6:
+			a  = 17.5e-6;
+			b  = 7602.0e-12;
+			t = 4.20;
+			break;
+		case CO2:
+			a  = 10.2e-6;
+			b  = 1674.0e-12;
+			t = 3.12;
+			break;
+		case HE:
+			a  = 0.78e-6;
+			b  = -9.0e-12;
+			t = 0.0;
+			break;
+		default:
+			a  = 0.0e-6;
+			b  = .0e-12;
+			t = 0.0;
+			printf("No refractive index available!\n");	
+	}	
+	n = 1.0 + a*(P/(T*RG)) + b*exp(t*(-1.0+295.0/T))*(P*P/(T*T*RG*RG));
+	return n;
 }
