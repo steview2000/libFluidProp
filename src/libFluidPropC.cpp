@@ -24,7 +24,8 @@ extern "C" {
 					printf("Fluid-string: %s %s\n",flag,fluid);
 					Pvap = PropsSI("P", "T", T, "Q", 0, fluid);
 					printf("Pvap: %lf\n",Pvap);
-					if (Pvap>P)	printf("Phase: Gas\n"){
+					if (Pvap>P){	
+						printf("Phase: Gas\n");
 						fluid_PTR->specify_phase(iphase_gas)	;
 					}
 					else printf("Phase: Liquid\n");
