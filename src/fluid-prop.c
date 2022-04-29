@@ -58,7 +58,8 @@ int main(){
 	double dtemp, volume, nusselt, lambda_eff, current, t_b, x_WL, alf_dt, drc, rc_gamma, a_g;
 	char fluid[200],flag[100];
 	
-	sprintf(flag,"HEOS");
+	//sprintf(flag,"HEOS");
+	sprintf(flag,"SLOW");
 
 	if(CHOICE == 0)
 		printf("\nDelta T_c is user specified. \nOutput for pattern formation near onset.\n");
