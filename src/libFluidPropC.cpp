@@ -14,45 +14,44 @@ extern "C" {
 		//char fullfluid[100];
 		
 		// This is for CoolProp
-		//shared_ptr<AbstractState> fluid_PTR(AbstractState::factory("HEOS",fluid));	
+
+		shared_ptr<AbstractState> fluid_PTR(AbstractState::factory("HEOS",fluid));	
+		if (strcmp(flag,"REFPROP")==0){
+			shared_ptr<AbstractState> fluid_PTR(AbstractState::factory("REFPROP",fluid));	
+		}else {
 		
-		// If you have REFPROP installed, use it 
-		shared_ptr<AbstractState> fluid_PTR(AbstractState::factory("REFPROP",fluid));	
-		if (strcmp(flag,"SLOW")==0){
-			// get critical point
-			Tcrit = fluid_PTR->keyed_output(iT_critical)	;
-			Pcrit = fluid_PTR->keyed_output(iP_critical)	;
-			//printf("Tcrit: %.4lfK,Pcrit: %.4lfpa\n",Tcrit,Pcrit);
-			if (T<Tcrit){ 
-				if (P<Pcrit){
-					//printf("Fluid-string: %s %s\n",flag,fluid);
-					Pvap = PropsSI("P", "T", T, "Q", 0, fluid);
-					//printf("Pvap: %lf\n",Pvap);
-					if (Pvap>P){
-						//printf("Phase: Gas\n");
-						fluid_PTR->specify_phase(iphase_gas)	;
+			if (strcmp(flag,"SLOW")==0){
+				// get critical point
+				Tcrit = fluid_PTR->keyed_output(iT_critical)	;
+				Pcrit = fluid_PTR->keyed_output(iP_critical)	;
+				//printf("Tcrit: %.4lfK,Pcrit: %.4lfpa\n",Tcrit,Pcrit);
+				if (T<Tcrit){ 
+					if (P<Pcrit){
+						//printf("Fluid-string: %s %s\n",flag,fluid);
+						Pvap = PropsSI("P", "T", T, "Q", 0, fluid);
+						//printf("Pvap: %lf\n",Pvap);
+						if (Pvap>P){
+							//printf("Phase: Gas\n");
+							fluid_PTR->specify_phase(iphase_gas)	;
+						}else{
+							//printf("Phase: Liquid\n");
+							fluid_PTR->specify_phase(iphase_liquid);
+						}
 					}else{
-						//printf("Phase: Liquid\n");
-						fluid_PTR->specify_phase(iphase_liquid);
+						//printf("Phase: supercritical liquid");
+						fluid_PTR->specify_phase(iphase_supercritical_liquid);
 					}
 				}else{
-					//printf("Phase: supercritical liquid");
-					fluid_PTR->specify_phase(iphase_supercritical_liquid);
-				}
-			}else{
-				if (P<Pcrit){ 
-					//printf("Supercritical gas\n");
-					fluid_PTR->specify_phase(iphase_supercritical_gas);
-				}else{
-					//printf("Supercritical \n");
-					fluid_PTR->specify_phase(iphase_supercritical);
+					if (P<Pcrit){ 
+						//printf("Supercritical gas\n");
+						fluid_PTR->specify_phase(iphase_supercritical_gas);
+					}else{
+						//printf("Supercritical \n");
+						fluid_PTR->specify_phase(iphase_supercritical);
+					};
 				};
 			};
-			//if (strcmp(flag,"GAS")== 0) fluid_PTR->specify_phase(iphase_gas);
-			//else if (strcmp(flag,"LIQUID")== 0) fluid_PTR->specify_phase(iphase_liquid);
-			//else if (strcmp(flag,"SUPERCRITICAL_GAS")== 0) fluid_PTR->specify_phase(iphase_supercritical_gas);
-			//else if (strcmp(flag,"SUPERCRITICAL_LIQUID")== 0) fluid_PTR->specify_phase(iphase_supercritical_liquid);
-		}
+		};
 
 		fluid_PTR->update(PT_INPUTS, P, T);
 		*prho    = fluid_PTR->rhomass()	;
