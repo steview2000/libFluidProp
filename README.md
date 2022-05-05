@@ -38,3 +38,12 @@ C library to calculate fluid properties - based heavily on CoolProp
 	popd
 	
 	sudo ldconfig
+
+## Compiling and install as user:
+	make
+	
+	To prevent linking errors later on, make sure that:
+	LIBRARY_PATH  is set correctly
+
+## install as root:
+	sudo make install
