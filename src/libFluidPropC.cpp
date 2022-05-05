@@ -17,7 +17,9 @@ extern "C" {
 		// This is for CoolProp
 
 		if (strcmp(flag,"REFPROP")==0) snprintf(database,8,"%s",flag);
+		
 		shared_ptr<AbstractState> fluid_PTR(AbstractState::factory(database,fluid));	
+		
 		if (strcmp(flag,"SLOW")==0){
 			// get critical point
 			Tcrit = fluid_PTR->keyed_output(iT_critical)	;
