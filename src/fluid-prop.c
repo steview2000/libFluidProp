@@ -28,8 +28,8 @@
 #include "header.h"
 
 #define DIAMETER 0.32  		/* diameter of cylindrical cell in m */
-#define HEIGHT 0.04 //9.964
-#define CHOICE 1			/* 0 = fix dtc (onset), 1 fix height (onset), 2 fix height (turbulence) */
+#define HEIGHT 0.040 //9.964
+#define CHOICE 2			/* 0 = fix dtc (onset), 1 fix height (onset), 2 fix height (turbulence) */
 
 // Some material parameters for plate corrections
 // TODO update units below
@@ -58,8 +58,8 @@ int main(){
 	double dtemp, volume, nusselt, lambda_eff, current, t_b, x_WL, alf_dt, drc, rc_gamma, a_g;
 	char fluid[200],flag[100];
 	
-	//sprintf(flag,"HEOS");
 	sprintf(flag,"HEOS");
+	//sprintf(flag,"REFPROP");
 
 	if(CHOICE == 0)
 		printf("\nDelta T_c is user specified. \nOutput for pattern formation near onset.\n");
@@ -416,8 +416,8 @@ printf("DTc = %.4e\n\n", dtc);
 	printf("\n");	
 	printf("dynamic viscosity (Pa s)         = %.5g \n",nu*rho);
 	if(CHOICE == 2){
-	printf("free fall velocity (m/s)         = %.5g \n",sqrt(2*height*G*alpha*dtemp));
-	printf("free fall time (s)               = %.5g \n",sqrt(2*height/(G*alpha*dtemp)));
+	printf("free-fall velocity (m/s)         = %.5g \n",sqrt(height*G*alpha*dtemp));
+	printf("free-fall time (s)               = %.5g \n",sqrt(height/(G*alpha*dtemp)));
 	}
 	printf("[(rho*Cp)_Cu/(rho*Cp)]^(1/2) = %.3f\n", plate_ratio_CU);
 	printf("[(rho*Cp)_Al/(rho*Cp)]^(1/2) = %.3f\n", plate_ratio_AL);
@@ -473,7 +473,7 @@ printf("DTc = %.4e\n\n", dtc);
 		tv = height*height*rho/nu;
 		omeg = 2.*3.14159*tv*0.25;
 		taylor = 4.*omeg*omeg;
-		U = sqrt(G*alpha*dtemp*height);	// "free-fall velocity" in cm/sec
+		U = sqrt(G*alpha*dtemp*height);	// "free-fall velocity" in m/sec
 		rossby = U/(2.*0.5*PI*height);			// for Omega = 1 Hz
 		printf("1/4 Hz yields Omega = %.3e and\tTaylor = %.3e\n", omeg, taylor);
 		printf("1/4 Hz yields Rossby = %.4f and\tU = %.3f\n", rossby, U);

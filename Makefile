@@ -6,6 +6,7 @@ all: libFluidPropC.so libFluidPropC.a fluid-prop
 
 fluid-prop: obj/fluid-prop.o obj/libFluidPropC.o
 	cc obj/fluid-prop.o -lFluidPropC -ldl -lCoolProp -o fluid-prop -lm -lstdc++
+	cp fluid-prop ~/bin/
 
 obj/fluid-prop.o: src/fluid-prop.c
 	cc -c src/fluid-prop.c
