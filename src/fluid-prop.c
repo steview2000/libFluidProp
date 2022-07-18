@@ -59,6 +59,8 @@ int main(){
 	char fluid[200],flag[100];
 	
 	sprintf(flag,"HEOS");
+	
+	// For refprop (works only if the library is in the correct location):
 	//sprintf(flag,"REFPROP");
 
 	if(CHOICE == 0)
