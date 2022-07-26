@@ -1,4 +1,4 @@
-all: libFluidPropC.so libFluidPropC.a fluid-prop
+ll: libFluidPropC.so libFluidPropC.a fluid-prop
 
 #testC: src/testC.c obj/libFluidPropC.o
 #	cc src/testC.c -L/home/falke/weis_sp/.local/lib obj/libFluidPropC.o -ldl -lCoolProp -o testC -lm -lstdc++
