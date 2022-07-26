@@ -1,10 +1,10 @@
-ll: libFluidPropC.so libFluidPropC.a fluid-prop
+all: libFluidProp.a fluid-prop #libFluidProp.so 
 
-#testC: src/testC.c obj/libFluidPropC.o
-#	cc src/testC.c -L/home/falke/weis_sp/.local/lib obj/libFluidPropC.o -ldl -lCoolProp -o testC -lm -lstdc++
+#testC: src/testC.c obj/libFluidProp.o
+#	cc src/testC.c -L/home/falke/weis_sp/.local/lib obj/libFluidProp.o -ldl -lCoolProp -o testC -lm -lstdc++
 	
 
-fluid-prop: obj/fluid-prop.o obj/libFluidPropC.o
+fluid-prop: obj/fluid-prop.o obj/libFluidProp.o
 	cc obj/fluid-prop.o -lFluidPropC -ldl -lCoolProp -o fluid-prop -lm -lstdc++
 	cp fluid-prop ~/bin/
 
@@ -13,20 +13,20 @@ obj/fluid-prop.o: src/fluid-prop.c
 	mkdir -p obj
 	mv fluid-prop.o obj/
 
-libFluidPropC.so: src/libFluidPropC.cpp obj/libFluidPropC.o
-	g++ -c -Wall -Werror -fPIC src/libFluidPropC.cpp -o obj/libFluidPropC.o -DCOOLPROP_LIB -I../include
-	g++ -shared -lm -o libFluidPropC.so obj/libFluidPropC.o
-	cp libFluidPropC.so ~/.local/lib/
+#libFluidProp.so: src/libFluidProp.cpp obj/libFluidProp.o
+#	g++ -c -Wall -Werror -fPIC src/libFluidProp.cpp -o obj/libFluidProp.o -DCOOLPROP_LIB -I../include
+#	g++ -shared -lm -o libFluidProp.so obj/libFluidProp.o
+#	cp libFluidProp.so ~/.local/lib/
 
-libFluidPropC.a: obj/libFluidPropC.o
-	ar rcs libFluidPropC.a obj/libFluidPropC.o
-	cp libFluidPropC.a ~/.local/lib/
+libFluidProp.a: obj/libFluidProp.o
+	ar rcs libFluidProp.a obj/libFluidProp.o
+	cp libFluidProp.a ~/.local/lib/
 
-obj/libFluidPropC.o: src/libFluidPropC.cpp
-	g++ -c src/libFluidPropC.cpp -o obj/libFluidPropC.o -DCOOLPROP_LIB -I../include 
+obj/libFluidProp.o: src/libFluidProp.cpp
+	g++ -c src/libFluidProp.cpp -o obj/libFluidProp.o -DCOOLPROP_LIB -I../include 
 
 
 install:
-	cp libFluidPropC.a /usr/local/lib/
-	cp src/libFluidPropC.h /usr/local/include/
+	cp libFluidProp.a /usr/local/lib/
+	cp src/libFluidProp.h /usr/local/include/
 	
