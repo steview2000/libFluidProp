@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "libFluidPropC.h"
+#include "libFluidProp.h"
 #include "CoolPropLib.h"
 #include "AbstractState.h"
 #include "crossplatform_shared_ptr.h"

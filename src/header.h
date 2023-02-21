@@ -58,3 +58,28 @@
 #include <stdlib.h>                                         
 #include <math.h>
 
+void fn_header(int, double, double, double);
+void get_prop(int, double, double, double, double *, double *, double *, double *, double *,  double *, double *, double *, double *);
+void cdo(double, double, double *, double *, double *, double *, double *, double *, double *);
+void fn_5cb(double, double, double *, double *, double *, double *, double *, double *, double *);
+void water2(double, double, double *, double *, double *, double *, double *, double *, double *);
+void acetone(double, double, double *, double *, double *, double *, double *, double *, double *);
+void nitrogen(double, double, double *, double *, double *, double *, double *, double *, double *);
+void helium(double, double, double *, double *, double *, double *, double *, double *, double *);
+void sf6(double, double, double *, double *, double *, double *, double *, double *, double *);
+void xenon(double, double, double *, double *, double *, double *, double *, double *, double *);
+void ethanol(double, double, double *, double *, double *, double *, double *, double *, double *);
+void methanol(double, double, double *, double *, double *, double *, double *, double *, double *);
+void isopropanol(double, double, double *, double *, double *, double *, double *, double *, double *);
+void toluene2(double, double, double *, double *, double *, double *, double *, double *, double *);
+void glycerol(double, double, double *, double *, double *, double *, double *, double *, double *);
+void sf6_crit(double, double, double *, double *, double *, double *, double *, double *, double *);
+void h2_xe(double, double, double, double *, double *, double *, double *, double *, double *, double *, double *, double *);
+void he_sf6(double, double, double, double *, double *, double *, double *, double *, double *, double *, double *, double *);
+double NofR_GL(double, double);
+double NofR_Oregon(double, double);
+double refIndexTayag(double ,double ,int );
+double calc_f(double x);
+double calc_g(double x);
+double grossmannLohse(double,double);
+int printUsage();
