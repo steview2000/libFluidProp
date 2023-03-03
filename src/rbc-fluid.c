@@ -5,10 +5,11 @@
 //		alpha 	=	thermal expansion coeff	 (1/K )                       
 //		comp	=	compressibility	 		 ( m^2/N )
 //						(this is sometimes set to zero)               
-//		lambda	= 	thermal conductivity 	 ( W/ m K )                    
-//		kappa 	=	thermal diffusivity 	 ( m2/s )                         
-//		nu 	    =	 shear viscosity 		 ( kg /s m )                      
-//		cp 	    =   spec. heat at const. press. (J/kg K )
+//		lambda	=	thermal conductivity 	 ( W/ m K )                    
+//		kappa 	=thermal diffusivity 	 ( m2/s )                         
+//		eta     = shear viscosity 		 ( kg /s m )                      
+//		nu 	    = kinematic viscosity 	( m^2/s )                      
+//		cp 	    =  spec. heat at const. press. (J/kg K )
 //
 //	For the mixtures, the syntax is slightly different, e.g.:
 // 
@@ -41,9 +42,9 @@
 
 int main(int argc,char **argv){
     //double res{0.0};
-	double T,P,temp, rho, alpha, comp, lambda, kappa, nu, cp;//, tscale;
-	double temp1, rho1, alpha1, lambda1, kappa1, nu1, cp1;
-	double temp2, rho2, alpha2, lambda2, kappa2, nu2, cp2;
+	double T,P,temp, rho, alpha, comp, lambda, kappa, nu, eta, cp;//, tscale;
+	double temp1, rho1, alpha1, lambda1, kappa1, nu1, eta1, cp1;
+	double temp2, rho2, alpha2, lambda2, kappa2, nu2, eta2, cp2;
 	double gamma[5], corr[5][5];
 	double p0, p1, p2, p3, p4;
 	double q, rh20, rr20, l2;
@@ -60,6 +61,8 @@ int main(int argc,char **argv){
 	char fluid[200],flag[100];
 	char opt;
 	
+	int coolprop=1 ; // flag whether calculation is done based on libCoolProp
+
 	sprintf(flag,"HEOS");
 	
 	// For refprop (works only if the library is in the correct location):
@@ -124,30 +127,38 @@ int main(int argc,char **argv){
 	switch (gas){
 		case AIR:
 			sprintf(fluid,"Air");
+			getCoolProp(fluid, T, P, &rho, &alpha, &comp, &lambda, &kappa, &nu, &cp, &psi, &lewis,flag);
 			break;
 		case HYDROGEN:
 			sprintf(fluid,"Hydrogen");
+			getCoolProp(fluid, T, P, &rho, &alpha, &comp, &lambda, &kappa, &nu, &cp, &psi, &lewis,flag);
 			break;
 		case HE:
 			sprintf(fluid,"Helium");
+			getCoolProp(fluid, T, P, &rho, &alpha, &comp, &lambda, &kappa, &nu, &cp, &psi, &lewis,flag);
 			break;
 		case N2:
 			sprintf(fluid,"Nitrogen");
+			getCoolProp(fluid, T, P, &rho, &alpha, &comp, &lambda, &kappa, &nu, &cp, &psi, &lewis,flag);
 			break;
 		case CO2:
 			sprintf(fluid,"CO2");
+			getCoolProp(fluid, T, P, &rho, &alpha, &comp, &lambda, &kappa, &nu, &cp, &psi, &lewis,flag);
 			break;
 		case XENON:
 			sprintf(fluid,"Xenon");
+			getCoolProp(fluid, T, P, &rho, &alpha, &comp, &lambda, &kappa, &nu, &cp, &psi, &lewis,flag);
 			break;
 		case SF6:
 			sprintf(fluid,"SF6");
+			getCoolProp(fluid, T, P, &rho, &alpha, &comp, &lambda, &kappa, &nu, &cp, &psi, &lewis,flag);
 			break;
 		case 7:
 			printf("SF6_crit  not yet implemented!!\n");
 			break;
 		case 8:
 			sprintf(fluid,"Ethane");
+			getCoolProp(fluid, T, P, &rho, &alpha, &comp, &lambda, &kappa, &nu, &cp, &psi, &lewis,flag);
 			break;
 		case 9:
 			printf("C2H6_crit  not yet implemented!!\n");
@@ -157,12 +168,15 @@ int main(int argc,char **argv){
 			break;
 		case 11:
 			sprintf(fluid,"Water");
+			getCoolProp(fluid, T, P, &rho, &alpha, &comp, &lambda, &kappa, &nu, &cp, &psi, &lewis,flag);
 			break;
 		case 12:
 			sprintf(fluid,"Acetone");
+			getCoolProp(fluid, T, P, &rho, &alpha, &comp, &lambda, &kappa, &nu, &cp, &psi, &lewis,flag);
 			break;
 		case 13:
 			sprintf(fluid,"Methanol");
+			getCoolProp(fluid, T, P, &rho, &alpha, &comp, &lambda, &kappa, &nu, &cp, &psi, &lewis,flag);
 			break;
 		case 14:
 			sprintf(fluid,"Ethanol");
@@ -188,7 +202,17 @@ int main(int argc,char **argv){
 			//scanf("%lf", &x);
 			break;
 		case 21:
-			printf("H2-SF6  not yet implemented!!\n");
+			printf("Molar concentration of SF6?  ");
+			scanf("%lf", &x);
+			he_sf6(temp, press, x, &rho, &alpha, &comp, &lambda, &kappa, &eta, &cp, &psi, &lewis);
+			// convert cgs units in SI units
+			rho    *= 1e3;
+			comp   *= 1e1;
+			lambda *= 1e-5;
+			cp     *= 1e-4;
+			kappa  *= 1e-4;
+			eta    *= 1e-1; 
+			nu     = eta/rho;
 			//printf("Molar concentration of the heavier component ?  ");
 			//scanf("%lf", &x);
 			break;
@@ -197,15 +221,16 @@ int main(int argc,char **argv){
 			scanf("%lf", &x);
 			sprintf(fluid,"MGL[%.2f]",x);
 			sprintf(flag,"INCOMP");
+			getCoolProp(fluid, T, P, &rho, &alpha, &comp, &lambda, &kappa, &nu, &cp, &psi, &lewis,flag);
 			break;
 		default:
 			printf("no such fluid available\n");
 			exit(0);
 
 	}
+	
 	printf("T [K]: %.4lf\tP [pa]: %.2lf\n",T,P);
 	//shared_ptr<AbstractState> Water(AbstractState::factory("HEOS",fluid));
-	getCoolProp(fluid, T, P, &rho, &alpha, &comp, &lambda, &kappa, &nu, &cp, &psi, &lewis,flag);
 	//kappa  = lambda/(cp*rho);
 
 	sigma = nu/kappa;				/* Prandtl number */
@@ -277,10 +302,28 @@ printf("DTc = %.4e\n\n", dtc);
 		printf("\nno such option.\n");
 		exit(0);
 	}
-
-	getCoolProp(fluid, temp1, P, &rho1, &alpha1, &comp, &lambda1, &kappa1, &nu1, &cp1, &psi, &lewis,flag);
-	getCoolProp(fluid, temp2, P, &rho2, &alpha2, &comp, &lambda2, &kappa2, &nu2, &cp2, &psi, &lewis,flag);
 	
+	if (gas == 21){
+			he_sf6(temp1, press, x, &rho1, &alpha1, &comp, &lambda1, &kappa1, &eta1, &cp1, &psi, &lewis);
+			he_sf6(temp2, press, x, &rho2, &alpha2, &comp, &lambda2, &kappa2, &eta2, &cp2, &psi, &lewis);
+			// convert cgs units in SI units
+			rho1    *= 1e3;
+			comp  *= 1e1;
+			lambda1 *= 1e-5;
+			kappa1  *= 1e-4;
+			eta1    *= 1e-1;
+			cp1     *= 1e-4;
+			nu1 = eta1/rho1;
+			rho2    *= 1e3;
+			lambda2 *= 1e-5;
+			cp2     *= 1e-4;
+			kappa2  *= 1e-4;
+			eta2     *= 1e-1;
+			nu2 = eta2/rho2;
+	}else{
+		getCoolProp(fluid, temp1, P, &rho1, &alpha1, &comp, &lambda1, &kappa1, &nu1, &cp1, &psi, &lewis,flag);
+		getCoolProp(fluid, temp2, P, &rho2, &alpha2, &comp, &lambda2, &kappa2, &nu2, &cp2, &psi, &lewis,flag);
+	}	
 	//kappa1 = lambda1/(rho1*cp1);
 	//kappa2 = lambda2/(rho2*cp2);
 	sigma1 = nu1/kappa1;

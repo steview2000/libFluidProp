@@ -15,7 +15,6 @@ extern "C" {
 		//char fullfluid[100];
 		
 		// This is for CoolProp
-
 		if (strcmp(flag,"REFPROP")==0) snprintf(database,8,"%s",flag);
 		
 		shared_ptr<AbstractState> fluid_PTR(AbstractState::factory(database,fluid));	
