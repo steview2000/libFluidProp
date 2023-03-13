@@ -20,6 +20,18 @@ def properties_he_sf6(T,P,x):
 	props['nu'] = props['eta']/props['rho']
 	props['kappa'] = props['lambda']/(props['cp']*props['rho'])
 	props['Pr'] = props['nu']/props['kappa']
+
+	# calculate separation ratio  according to Cross and Hohenberg, Rev. Mod. Phys., (1993), page 999
+	x2 = x*1.001
+	x1 = x*0.999
+	
+	fluidstring1 = 'Helium[%f]&SF6[%f]'%(x1,1-x1)
+	fluidstring2 = 'Helium[%f]&SF6[%f]'%(x2,1-x2)
+	rho1  = CP.PropsSI('Dmass','T',T,'P',P,fluidstring1)
+	rho2  = CP.PropsSI('Dmass','T',T,'P',P,fluidstring2)
+	beta = (rho2-rho1)/(props['rho'] * (x2-x1))
+	c  = beta/props['alpha']
+	
 	return props 
 
 
